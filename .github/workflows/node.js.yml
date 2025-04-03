@@ -25,5 +25,4 @@ jobs:
           npm start &  
           sleep 5  # Wait for server to start  
           curl http://localhost:8080  # Test if server is running  
-        env:  
-          PORT: 8080  # Ensures your app runs on port 8080  
+
