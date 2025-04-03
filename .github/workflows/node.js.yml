@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Deploy Node.js App to GitHub Pages
 
 on:
   push:
@@ -6,10 +6,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
       pages: write
       id-token: write
 
@@ -20,21 +19,15 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '20.x'
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm install
 
-      # Build your static files (replace with your build command)
+      # Build your static files (REPLACE THIS COMMAND)
       - name: Build
-        run: npm run build
+        run: npm start
 
+      # Deploy to GitHub Pages
       - name: Setup Pages
         uses: actions/configure-pages@v3
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
-        with:
-          path: './dist'  # Change this to your build output folder
-
-      - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v2
