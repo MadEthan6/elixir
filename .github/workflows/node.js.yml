@@ -1,4 +1,4 @@
-name: Deploy Node.js App to GitHub Pages
+name: Deploy to GitHub Pages
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-and-deploy:
+  build-deploy:
     runs-on: ubuntu-latest
     permissions:
       pages: write
@@ -15,19 +15,26 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Modified Node.js setup (without cache)
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '20.x'
-          cache: 'npm'
 
+      # Install deps without lock file
       - name: Install dependencies
-        run: npm install
+        run: npm install --no-package-lock
 
-      # Build your static files (REPLACE THIS COMMAND)
       - name: Build
         run: npm start
 
-      # Deploy to GitHub Pages
       - name: Setup Pages
         uses: actions/configure-pages@v3
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: './dist'  # Update this path
+
+      - name: Deploy
+        uses: actions/deploy-pages@v2
