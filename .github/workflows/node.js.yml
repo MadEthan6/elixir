@@ -1,34 +1,40 @@
-name: Node.js CI
+name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
   workflow_dispatch:
 
 jobs:
-  build-and-start:
+  build-deploy:
     runs-on: ubuntu-latest
-    
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+
     steps:
-    - uses: actions/checkout@v4
-    
-    # Set up Node.js (replace '20.x' with your Node.js version if different)
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '20.x'
-        cache: 'npm'
-    
-    # Install dependencies (cached automatically)
-    - name: Install dependencies
-      run: npm install
-      
-    # Optional: Run tests if you have them
-    # - name: Run tests
-    #   run: npm test
-      
-    # Start your application
-    - name: Start application
-      run: npm start
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+
+      - name: Install dependencies
+        run: npm install
+
+      # Build your static files (replace with your build command)
+      - name: Build
+        run: npm run build
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: './dist'  # Change this to your build output folder
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v2
